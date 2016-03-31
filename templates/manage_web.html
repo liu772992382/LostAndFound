@@ -1,0 +1,82 @@
+{% extends "base_web.html" %}
+{% block title %}管理启事{% endblock %}
+
+{% block tab %}
+
+{% endblock %}
+{%  block switch_nav %}
+    <nav class="nav fl">
+      <ul class="head-nav">
+        <li class="nav-item"><a href="/found/">寻物</a></li>
+        <li class="nav-item"><a href="/found/form">发布启事</a></li>
+        <li class="nav-item active"><a href="/found/manage">管理启事</a></li>
+      </ul>
+    </nav>
+{%  endblock %}
+{% block content %}
+<div class="content">
+        <div class="main-content">
+          <div class="am-g">
+              <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2
+  am-avg-md-3 am-avg-lg-3 am-gallery-bordered" data-am-gallery="{  }" >
+  
+               {% for user in users.items%}
+      <li>
+        <div class="am-gallery-item">
+              <img src="../../static/img/{{user.ImgPath}}"   alt="远方 有一个地方 那里种有我们的梦想"/>
+                <div class="am-gallery-desc">{{user.SubTime}}   
+                 <a href="/found/manage?id={{user.Id}}&type=0&page={{page}}">        删除</a>
+      {% if user.LostStatus %}
+        <a  href="/found/manage?id={{user.Id}}&type=1&page={{page}}">完成</a>
+        {% else %}已完成
+        {% endif %}
+                
+                 {% if not user.Verify %}
+      <div class="am-disabled" >未通过审核 </div>
+      {% else %}
+      <div class="am-disabled">已通过审核 </div>
+      {% endif %}p>{{user.Place}}--{{user.Time}}</p>
+                <p style="word-break: break-all;">{{user.Content}}</p></div>
+        </div>
+      </li>
+      {% endfor%}
+              </ul>                  
+       
+<ul class="am-pagination am-pagination-centered pagination">
+{% if users.has_prev %}
+      <li>
+        <a href="{{ url_for('index', page = users.prev_num) }}" class="">&laquo</a>
+      </li>
+{% else %}
+      <li class="am-disabled">
+        <a href="{{ url_for('index', page = users.prev_num) }}" class="">&laquo</a></li>
+{% endif %}
+  {% for i in range(((users.total-1)//5+1)) %}
+  {% if i+1==page %}
+  <li class="am-active"><a href="/found/{{i+1}}">{{i+1}}</a></li>
+  {% else %}
+  <li><a href="/found/{{i+1}}">{{i+1}}</a></li>
+  {% endif %}
+  {% endfor %}
+{% if users.has_next %}
+      <li>
+        <a href="{{ url_for('index', page = users.next_num) }}" class="">&raquo</a>
+      </li>
+{% else %}
+<li class="am-disabled">
+        <a href="{{ url_for('index', page = users.next_num) }}" class="">&raquo</a>
+      </li>
+{% endif %}
+</ul>
+  
+<div class="am-u-sm-2  am-u-end notice fr" >
+<br>
+<div class="am-panel am-panel-default" style="position: fixed;">
+<div class="am-panel-hd"><h3 class="am-panel-title">公告</h3></div><div class="am-panel-bd">这里是面板其他内容。</div><ul class="am-list am-list-static"><li>登录之后才可以使用发布启示和管理启示.</li><li> 发布管理启示之后，需经过管理员审核才可以在首页显示.</li><li>当你发布的启示已经完成时，请将其标记为已完成.</li><li>如果你想修改已发布的启示，抱歉只能够删除后重新发布.</li></ul>
+</div>
+</div> 
+</div>
+</div>
+</div>
+
+{% endblock %}

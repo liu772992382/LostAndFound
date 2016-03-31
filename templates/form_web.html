@@ -1,0 +1,61 @@
+{% extends "base_web.html" %}
+{% block title %}提交启事{% endblock %}
+
+{% block tab %}
+{% endblock %}
+{%  block switch_nav %}
+    <nav class="nav fl">
+      <ul class="head-nav">
+        <li class="nav-item"><a href="/found/">寻物</a></li>
+        <li class="nav-item active"><a href="/found/form">发布启事</a></li>
+        <li class="nav-item"><a href="/found/manage">管理启事</a></li>
+      </ul>
+    </nav>
+{%  endblock %}
+{% block content %}
+<div class="publish-content">
+<form class="am-form" method="post" action="/found/form" enctype="multipart/form-data" data-am-validator>
+
+<div class="am-form-group">
+      <label for="Type">方式</label>
+      <select id="Type" name="Type">
+        <i class="dropdown icon"></i>
+        <option value="寻物">寻物</option>
+        <option value="招领">招领</option>
+        </select> 
+    </div>
+
+    <div class="am-form-group">
+      <label for="ThingsType">类型</label>
+      <select id="ThingsType" name="ThingsType">
+        <option value="0">证/卡</option>
+        <option value="1" >钱包</option>
+        <option value="2" >钥匙</option>
+        <option value="3" >手机</option>
+        <option value="4">其他</option>
+      </select>
+    </div>
+     <div class="am-form-group">
+      <label for="Time">时间</label>
+      <input type="text" class="am-form-field" id="Time" name="Time" max="15" required="">
+    </div>
+     <div class="am-form-group">
+      <label for="Place">地点</label>
+      <input type="text" class="am-form-field" id="Place" name="Place" required="">
+    </div>
+     <div class="am-form-group">
+      <label for="ContactWay">联系方式</label>
+       <input type="text" class="am-form-field" name="ContactWay" id="ContactWay" required="">
+    </div>
+    <div class="am-form-group am-input-group-primary" style="{vertical-align: middle;}">
+      <label for="Content">物品描述</label>
+      <textarea id="Content" name="Content" required></textarea>
+    </div>
+    <p><button type="submit" class="am-btn am-btn-primary">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;*需要经过管理员审核才能显示在首页</p>
+
+</form>
+</div>
+</body>
+</html>
+
+{% endblock %}
