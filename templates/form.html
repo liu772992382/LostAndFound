@@ -90,7 +90,8 @@
       else{
         this.outerHTML += '';
         this.value ="";
-        alert('请上传正确的图片格式(*.jpg,*.png,*.jpeg,*.bmp)');
+        var Warning='<span class="am-badge">请上传正确的图片格式(*.jpg,*.png,*.jpeg,*.bmp)</span>';
+        $('#file-list').html(Warning);
       }
     });
   });
