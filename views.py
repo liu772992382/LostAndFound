@@ -269,9 +269,6 @@ def yiban():
 	session['userid']=info['visit_user']['userid']
 	return redirect('/found')
 
-@app.route('/found/test',methods=['GET'])
-def test():
-	return render_template('test_thumbnail.html')
 
 if __name__=='__main__':
 	app.run(host='0.0.0.0',port=8888, debug=True)
