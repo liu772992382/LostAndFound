@@ -11,6 +11,7 @@
 content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link rel="stylesheet" href="../../static/css/amazeui.min.css">
 <link rel="icon" type="image/jpg" href="../../static/assets/i/favicon.jpg">
+<script src="../../static/js/jquery.min.js"></script>
     {%- block head %}
     <title>{% block title %}{% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,13 +23,13 @@ content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 <div data-am-widget="navbar" class="am-navbar am-cf  am-no-layout" id="" style="background-color: rgba(240,240,240,200);border-top-color: #7FFFD4;">
   <ul class="am-navbar-nav am-cf am-avg-sm-4" style="color: rgba(36, 154, 214, 0.9);">
   <li><a href="/found/" class="">
-    <span class="am-icon-search"></span> 
+    <span class="am-icon-search"></span>
     <span class="am-navbar-label">寻物招领</span></a></li>
   <li ><a href="/found/form" class="">
-    <span class="am-icon-edit"></span> 
+    <span class="am-icon-edit"></span>
     <span class="am-navbar-label">发布启事</span></a></li>
   <li ><a href="/found/manage" class="">
-    <span class="am-icon-cog"></span> 
+    <span class="am-icon-cog"></span>
     <span class="am-navbar-label">管理启事</span></a></li>
   </ul>
 </div>
@@ -50,7 +51,7 @@ content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     <a href="/found/register">
       <button class="am-btn am-btn-danger am-topbar-btn am-btn-sm">注册</button></a>
     </div>
-  
+
   </div>
   {% else %}
 <div class="am-topbar-right">
@@ -69,7 +70,6 @@ content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     {%- endblock content %}
     {%- endblock body %}
   </body>
-    <script src="../../static/js/jquery.min.js"></script>
 <script src="../../static/js/amazeui.min.js"></script>
 {%- endblock html %}
 </html>

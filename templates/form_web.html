@@ -59,12 +59,20 @@
 <div id="file-list"></div>
 <script>
   $(function() {
-    $('#doc-form-file').on('change', function() {
-      var fileNames = '';
-      $.each(this.files, function() {
-        fileNames += '<span class="am-badge">' + this.name + '</span> ';
-      });
-      $('#file-list').html(fileNames);
+    $('#doc-form-file').change(function() {
+      a=$(this).val().toLowerCase().split('.')
+      if(a[a.length-1]=='png'||a[a.length-1]=='jpeg'||a[a.length-1]=='jpg'||a[a.length-1]=='bmp'){
+        var fileNames = '';
+        $.each(this.files, function() {
+          fileNames += '<span class="am-badge">' + this.name + '</span> ';
+        });
+        $('#file-list').html(fileNames);
+      }
+      else{
+        this.outerHTML += '';
+        this.value ="";
+        alert('请上传正确的图片格式(*.jpg,*.png,*.jpeg,*.bmp)');
+      }
     });
   });
 </script>
