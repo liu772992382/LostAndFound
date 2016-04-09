@@ -18,14 +18,14 @@
        class="am-intro am-cf am-intro-default"
        >
       <div class="am-intro-hd">
-        <h2 class="am-intro-title">{{user.Header}}        
-        
+        <h2 class="am-intro-title">{{user.Header}}
+
         <a class="am-intro-more am-intro-more-top " href="/found/verified?id={{user.Id}}&type=0&page={{page}}">删除</a>
       </h2>
       </div>
     <div class="am-g am-intro-bd">
         <div
-            class="am-intro-left am-u-sm-5"><img src="/static/img/{{user.ImgPath}}" /></div>
+            class="am-intro-left am-u-sm-5"><img src="/static/img/{{user.ImgPath}}.thumbnail" /></div>
         <div
             class="am-intro-right am-u-sm-7">
             <span class="am-badge am-badge-success am-radius am-text-default">{{user.Time}}</span>
@@ -86,4 +86,3 @@
 {% endif %}
 </ul>
 {% endblock %}
-

@@ -22,7 +22,7 @@
         <i class="dropdown icon"></i>
         <option value="寻物">寻物</option>
         <option value="招领">招领</option>
-        </select> 
+        </select>
     </div>
 
     <div class="am-form-group">
@@ -51,6 +51,23 @@
       <label for="Content">物品描述</label>
       <textarea id="Content" name="Content" required></textarea>
     </div>
+    <div class="am-form-group am-form-file">
+  <button type="button" class="am-btn am-btn-primary am-btn-sm">
+    <i class="am-icon-cloud-upload"></i>选择图片（建议上传横向图片）</button>
+  <input id="doc-form-file" type="file" name="form_file" multiple>
+</div>
+<div id="file-list"></div>
+<script>
+  $(function() {
+    $('#doc-form-file').on('change', function() {
+      var fileNames = '';
+      $.each(this.files, function() {
+        fileNames += '<span class="am-badge">' + this.name + '</span> ';
+      });
+      $('#file-list').html(fileNames);
+    });
+  });
+</script>
     <p><button type="submit" class="am-btn am-btn-primary">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;*需要经过管理员审核才能显示在首页</p>
 
 </form>

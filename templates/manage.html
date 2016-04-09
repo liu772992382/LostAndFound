@@ -17,11 +17,11 @@
 
     <div class="am-g am-intro-bd" style="background-color: rgba(250,250,250,200);">
         <div
-            class="am-intro-left am-u-sm-5"><img src="../../static/img/{{user.ImgPath}}" /></div>
+            class="am-intro-left am-u-sm-5"><img src="../../static/img/{{user.ImgPath}}.thumbnail"/></div>
         <div
             class="am-intro-right am-u-sm-7">
 
-<p style="color:    #68838B;margin-bottom: 0.2rem;font-size: 1.4rem;"><span class="am-icon-clock-o"></span>&nbsp类型&nbsp{{user.Type}}<br></span><span class="am-icon-clock-o" style="width: 16px;"></span>&nbsp时间&nbsp{{user.Time}}<br><span class="am-icon-map-marker"style="width: 16px;"></span>&nbsp地点&nbsp{{user.Place}}<br>
+<p style="color:    #68838B;margin-bottom: 0.2rem;font-size: 1.6rem;"><span class="am-icon-clock-o"></span>&nbsp类型&nbsp{{user.Type}}<br></span><span class="am-icon-clock-o" style="width: 16px;"></span>&nbsp时间&nbsp{{user.Time}}<br><span class="am-icon-map-marker"style="width: 16px;"></span>&nbsp地点&nbsp{{user.Place}}<br>
     <span class="am-icon-phone" style="width: 16px;"></span>&nbsp联系方式&nbsp{{user.ContactWay}}</p>
 </div></br>
   <div class="am-article-bd">
@@ -31,7 +31,7 @@
   </div>
   </div>
       <div class="am-intro-more-bottom">
-      
+
       {% if not user.Verify %}
       <div class="am-disabled" >未通过审核 </div>
       {% else %}
@@ -81,4 +81,3 @@
 {% endif %}
 </ul>
 {% endblock %}
-

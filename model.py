@@ -33,6 +33,7 @@ class UserData(db.Model):
     Type = db.Column(db.String(10))
     Content = db.Column(db.String(400))
     ImgPath = db.Column(db.String(150))
+    #ThumbnailPath = db.Column(db.String(150))
     LostStatus = db.Column(db.Boolean,default=True)
     ContactWay = db.Column(db.String(100))
     Verify = db.Column(db.Boolean,default=False)

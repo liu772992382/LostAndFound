@@ -5,6 +5,8 @@ sys.path.append('..')
 from model import *
 from flask import Flask, request, render_template,redirect,make_response,flash,session,g,url_for
 import os
+from PIL import Image
+from werkzeug.utils import secure_filename
 from flask.ext.sqlalchemy import SQLAlchemy
 from os import urandom
 import requests
@@ -13,11 +15,12 @@ from time import *
 import hashlib
 from M2Crypto import util
 from Crypto.Cipher import AES
+from PIL import Image
 
 
-UPLOAD_FLODER = 'static/img'
+IMG_FLODER = 'static/img/'
 
-admin_list=['201632220424','5297459']
+admin_list=['201632220424','5297459','20164994118']
 
 def decrypt(data):
 	iv = '9b738aa2ee18145a' # app id
@@ -44,6 +47,12 @@ def IsMobile(a):
 	else:
 		return False
 
+def Thumbnail(fname):
+	size=160,160
+	im=Image.open(IMG_FLODER+fname)
+	im.thumbnail(size,Image.ANTIALIAS)
+	im.save(IMG_FLODER+fname+'.thumbnail','png')
+
 @app.route('/found/login',methods=['GET','POST'])
 def login(Warnings=''):
 	if 'userid' in session and session['userid']!='':
@@ -53,7 +62,7 @@ def login(Warnings=''):
 	if request.method=='POST':
 		form=request.form
 		p=db.session.query(User).filter(User.EMail==form['EMail']).first()
-		if  p!=None and p.PassWord==hashpw(form['PassWord']):	
+		if  p!=None and p.PassWord==hashpw(form['PassWord']):
 			session['userid']=p.UserId
 			return redirect('/found/manage')
 		else:
@@ -115,6 +124,10 @@ def form():
 		form = request.form
 		t=localtime()
 		things=['kapian_icon.png','qianbao_icon.png','yaoshi_icon.png','shouji_icon.png','qita_icon.png']
+		f=request.files['form_file']
+		fname=secure_filename(f.filename)
+		f.save(os.path.join(IMG_FLODER,fname))
+		Thumbnail(fname)
 		g.userdata=UserData()
 		g.userdata.Time=form['Time']
 		g.userdata.Place=form['Place']
@@ -124,7 +137,7 @@ def form():
 		g.userdata.ContactWay=form['ContactWay']
 		g.userdata.LostStatus=True
 		g.userdata.SubTime=str(t[0])+'.'+str(t[1])+'.'+str(t[2])
-		g.userdata.ImgPath=things[int(form['ThingsType'])]
+		g.userdata.ImgPath=fname
 		g.userdata.UserId=session['userid']
 		db.session.add(g.userdata)
 		db.session.commit()
@@ -163,6 +176,8 @@ def verified(page=1):
 		LoginVer=False
 	else:
 		LoginVer=True
+	if session['userid'] not in admin_list:
+		return redirect('/found/') 
 	if request.query_string:
 		x=request.args
 		if x['type']=='0':
@@ -199,7 +214,7 @@ def manage(page=1):
 		db.session.commit()
 		db.session.close()
 		admins=UserData.query.filter_by(UserId=session['userid']).order_by(UserData.Id.desc()).paginate(int(x['page']),5,False)
-		
+
 		if not IsMobile(request.headers.get('User-Agent')):
 			return render_template('manage_web.html',users=admins,title=u'管理启事',page=int(x['page']))
 		else:
@@ -216,6 +231,14 @@ def manage(page=1):
 @app.route('/found/admin',methods=['GET','POST'])
 @app.route('/found/admin/<int:page>',methods=['GET','POST'])
 def admin(page=1):
+	if 'userid' not in session or session['userid']=='':
+		return redirect('/found/login')
+	if 'userid' in session and session['userid']!='':
+		LoginVer=False
+	else:
+		LoginVer=True
+	if session['userid'] not in admin_list:
+		return redirect('/found/')
 	admin=UserData()
 	if request.query_string:
 		x=request.args
@@ -245,6 +268,10 @@ def yiban():
 	info=decrypt(x[1])
 	session['userid']=info['visit_user']['userid']
 	return redirect('/found')
+
+@app.route('/found/test',methods=['GET'])
+def test():
+	return render_template('test_thumbnail.html')
 
 if __name__=='__main__':
 	app.run(host='0.0.0.0',port=8888, debug=True)
