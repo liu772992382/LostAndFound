@@ -125,9 +125,12 @@ def form():
 		t=localtime()
 		things=['kapian_icon.png','qianbao_icon.png','yaoshi_icon.png','shouji_icon.png','qita_icon.png']
 		f=request.files['form_file']
-		fname=secure_filename(f.filename)
-		f.save(os.path.join(IMG_FLODER,fname))
-		Thumbnail(fname)
+		if f.filename=='':
+			fname=things[int(form['ThingsType'])]
+		else:
+			fname=secure_filename(f.filename)
+			f.save(os.path.join(IMG_FLODER,fname))
+			Thumbnail(fname)
 		g.userdata=UserData()
 		g.userdata.Time=form['Time']
 		g.userdata.Place=form['Place']
@@ -177,7 +180,7 @@ def verified(page=1):
 	else:
 		LoginVer=True
 	if session['userid'] not in admin_list:
-		return redirect('/found/') 
+		return redirect('/found/')
 	if request.query_string:
 		x=request.args
 		if x['type']=='0':
