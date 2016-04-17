@@ -161,7 +161,7 @@ def index(page = 1):
 		LoginVer=False
 	else:
 		LoginVer=True
-	paginate = UserData.query.filter(UserData.Verify==True,UserData.LostStatus==True).order_by(UserData.Id.desc()).paginate(page, 5, False)
+	paginate = UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(page, 5, False)
 	# for i in paginate.items:
 	if not IsMobile(request.headers.get('User-Agent')):
 		return render_template('index_web.html',users=paginate,page=page,title=u'寻物招领',Login=LoginVer)
