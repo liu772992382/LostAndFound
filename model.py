@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     __tablename__ = 'Users'
-    Id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     UserId = db.Column(db.String(50))
     TrueName = db.Column(db.String(50))
     EMail = db.Column(db.String(64))
@@ -22,8 +22,11 @@ class User(db.Model):
     StuNumber = db.Column(db.String(15))
     RegTime = db.Column(db.String(50))
 
+    def __str__ (self):
+        return "User(Id='%s')" % self.id
+
     def dict(self):
-        return {'Id':Id,
+        return {'Id':self.id,
                 'UserId':self.UserId,
                 'TrueName':self.TrueName,
                 'EMail':self.Email,
