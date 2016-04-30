@@ -22,7 +22,19 @@ class User(db.Model):
     StuNumber = db.Column(db.String(15))
     RegTime = db.Column(db.String(50))
 
+    def dict(self):
+        return {'Id':Id,
+                'UserId':self.UserId,
+                'TrueName':self.TrueName,
+                'EMail':self.Email,
+                'PassWord':self.PassWord,
+                'StuNumber':self.StuNumber,
+                'RegTime':self.RegTime}
+
 class UserData(db.Model):
+
+
+
     __tablename__ = 'NoticeData'
     UserId = db.Column(db.String(20))
     Id = db.Column(db.Integer,primary_key=True)
@@ -39,4 +51,17 @@ class UserData(db.Model):
     Verify = db.Column(db.Boolean,default=False)
     SubTime=db.Column(db.String(30))
 
-db.create_all()
+    def dict(self):
+    	return {'UserId':self.UserId,
+    			'Id':self.Id,
+    			'Time':self.Time,
+    			'Header':self.Header,
+    			'Place':self.Place,
+    			'ThingsType':self.ThingsType,
+    			'Type':self.Type,
+    			'Content':self.Content,
+    			'ImgPath':self.ImgPath,
+    			'LostStatus':self.LostStatus,
+    			'ContactWay':self.ContactWay,
+    			'Verify':self.Verify,
+    			'SubTime':self.SubTime}
