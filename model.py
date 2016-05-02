@@ -4,6 +4,7 @@ from flask import Flask, request, render_template,redirect,make_response,flash,s
 import flask
 import os
 import sys
+import flask.ext.whooshalchemy as whooshalchemy
 from flask.ext.sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -24,6 +25,8 @@ class User(db.Model):
 
 class UserData(db.Model):
     __tablename__ = 'NoticeData'
+    __searchable__ = ["Header", "Place", "ThingsType", "Type", "Content", "ContactWay", "Time"]
+
     UserId = db.Column(db.String(20))
     Id = db.Column(db.Integer,primary_key=True)
     Time = db.Column(db.String(50))
@@ -33,10 +36,28 @@ class UserData(db.Model):
     Type = db.Column(db.String(10))
     Content = db.Column(db.String(400))
     ImgPath = db.Column(db.String(150))
+    Reward = db.Column(db.Integer)
     #ThumbnailPath = db.Column(db.String(150))
     LostStatus = db.Column(db.Boolean,default=True)
     ContactWay = db.Column(db.String(100))
     Verify = db.Column(db.Boolean,default=False)
     SubTime=db.Column(db.String(30))
 
-db.create_all()
+class AdminUser(db.Model):
+    __tablename__ = "AdminUsers"
+    Id = db.Column(db.Integer, primary_key=True)
+    UserId = db.Column(db.String(50))
+    PassWord = db.Column(db.String(50))
+    RegTime = db.Column(db.String(50))
+
+whooshalchemy.whoosh_index(app, UserData)
+
+if __name__ == '__main__':
+    db.create_all()
+
+    admin = AdminUser()
+    admin.UserId = "20144483"
+    admin.PassWord = "7ff5ae861e302ac269518883ce0a2dea"
+    db.session.add(admin)
+    db.session.commit()
+    db.session.close()

@@ -6,82 +6,90 @@
 {%  block switch_nav %}
     <nav class="nav fl">
       <ul class="head-nav">
-        <li class="nav-item"><a href="/found/">寻物</a></li>
+        <li class="nav-item"><a href="/found?type=寻物">寻物</a></li>
+        <li class="nav-item"><a href="/found?type=招领">招领</a></li>
         <li class="nav-item active"><a href="/found/form">发布启事</a></li>
         <li class="nav-item"><a href="/found/manage">管理启事</a></li>
       </ul>
     </nav>
 {%  endblock %}
 {% block content %}
-<div class="publish-content">
-<form class="am-form" method="post" action="/found/form" enctype="multipart/form-data" data-am-validator>
-
-<div class="am-form-group">
-      <label for="Type">方式</label>
-      <select id="Type" name="Type">
-        <i class="dropdown icon"></i>
-        <option value="寻物">寻物</option>
-        <option value="招领">招领</option>
-        </select>
+<div class="content">
+    <div class="main-content inner">
+        <form role="form" method="post" enctype="multipart/form-data">
+          <div class="publish-form-item">
+            <label for="Header">标题</label>
+            <input type="text" id="Header" name="Header" required="">
+          </div>
+          <div class="publish-form-item">
+            <label for="Type">方式</label>
+            <select id="Type" name="Type">
+                <option value="寻物">寻物</option>
+                <option value="招领">招领</option>
+            </select>
+          </div>
+          <div class="publish-form-item">
+             <label for="ThingsType">类型</label>
+             <select id="ThingsType" name="ThingsType">
+               <option value="0">证/卡</option>
+               <option value="1" >钱包</option>
+               <option value="2" >钥匙</option>
+               <option value="3" >手机</option>
+               <option value="4">其他</option>
+             </select>
+          </div>
+          <div class="publish-form-item">
+            <label for="Time">时间</label>
+            <input type="text" id="Time" name="Time" required="">
+          </div>
+          <div class="publish-form-item">
+            <label for="Place">地点</label>
+            <input type="text" id="Place" name="Place" required="">
+          </div>
+          <div class="publish-form-item">
+            <label for="ContactWay">联系方式</label>
+             <input type="text" name="ContactWay" id="ContactWay" required="">
+          </div>
+          <div class="publish-form-item">
+            <label for="Reward" id="RewardLabel">悬赏网薪</label>
+             <input type="text" name="Reward" id="Reward" required="">
+          </div>
+          <div class="publish-form-item">
+            <label for="Content">物品描述</label>
+            <textarea id="Content" name="Content" required></textarea>
+          </div>
+          <div class="publish-form-item">
+            <span>
+              <input id="File" type="file" name="form_file" multiple><img src="/static/img/upload.png" />添加图片
+            </span>
+          </div>
+          <div class="publish-form-item">
+            <button type="submit" class="btn btn-success">提交</button>
+          </div>
+        </form>
     </div>
-
-    <div class="am-form-group">
-      <label for="ThingsType">类型</label>
-      <select id="ThingsType" name="ThingsType">
-        <option value="0">证/卡</option>
-        <option value="1" >钱包</option>
-        <option value="2" >钥匙</option>
-        <option value="3" >手机</option>
-        <option value="4">其他</option>
-      </select>
-    </div>
-     <div class="am-form-group">
-      <label for="Time">时间</label>
-      <input type="text" class="am-form-field" id="Time" name="Time" max="15" required="">
-    </div>
-     <div class="am-form-group">
-      <label for="Place">地点</label>
-      <input type="text" class="am-form-field" id="Place" name="Place" required="">
-    </div>
-     <div class="am-form-group">
-      <label for="ContactWay">联系方式</label>
-       <input type="text" class="am-form-field" name="ContactWay" id="ContactWay" required="">
-    </div>
-    <div class="am-form-group am-input-group-primary" style="{vertical-align: middle;}">
-      <label for="Content">物品描述</label>
-      <textarea id="Content" name="Content" required></textarea>
-    </div>
-    <div class="am-form-group am-form-file">
-  <button type="button" class="am-btn am-btn-primary am-btn-sm">
-    <i class="am-icon-cloud-upload"></i>选择图片（建议上传横向图片）</button>
-  <input id="doc-form-file" type="file" name="form_file" multiple>
 </div>
-<div id="file-list"></div>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script>
   $(function() {
-    $('#doc-form-file').change(function() {
+    $('#File').change(function() {
       a=$(this).val().toLowerCase().split('.')
       if(a[a.length-1]=='png'||a[a.length-1]=='jpeg'||a[a.length-1]=='jpg'||a[a.length-1]=='bmp'){
-        var fileNames = '';
-        $.each(this.files, function() {
-          fileNames += '<span class="am-badge">' + this.name + '</span> ';
-        });
-        $('#file-list').html(fileNames);
       }
       else{
         this.outerHTML += '';
         this.value ="";
-        var Warning='<span class="am-badge">请上传正确的图片格式(*.jpg,*.png,*.jpeg,*.bmp)</span>';
-        $('#file-list').html(Warning);
+        alert('请上传正确的图片格式(*.jpg,*.png,*.jpeg,*.bmp)');
       }
     });
   });
 </script>
-    <p><button type="submit" class="am-btn am-btn-primary">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;*需要经过管理员审核才能显示在首页</p>
-
-</form>
-</div>
-</body>
-</html>
+<script>
+  $("#Type").change(function() {
+    if ($(this).val() == "招领") {
+      $("#RewardLabel").html("需要网薪");
+    }
+  });
+</script>
 
 {% endblock %}

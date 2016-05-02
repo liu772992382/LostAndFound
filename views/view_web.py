@@ -23,26 +23,23 @@ def hashpw(a):
 def login():
 	if request.method=='POST':
 		form=request.form
-		print form
 		p=db.session.query(User).filter(User.EMail==form['EMail'])[0]
 		if p.PassWord==hashpw(form['PassWord']):
 			session['userid']=p.UserId
 			return redirect('/found')
 		else:
-			return retirect('/found/login')
+			return redirect('/found/login')
 	return render_template('login_web.html')
 
 @app.route('/found/register',methods=['GET','POST'])
 def register():
 	if request.method=='POST':
 		form = request.form
-		print form
 		t=localtime()
 		g.userdata=User()
 		g.userdata.TrueName=form['TrueName']
 		g.userdata.EMail=form['EMail']
 		g.userdata.PassWord=hashpw(form['PassWord'])
-		print g.userdata.PassWord
 		g.userdata.StuNumber=form['StuNumber']
 		g.userdata.RegTime=str(t[0])+'.'+str(t[1])+'.'+str(t[2])
 		userid=''
@@ -60,9 +57,7 @@ def register():
 @app.route('/found/form', methods=['GET', 'POST'])
 def form():
 	if request.method=='POST':
-		print 1
 		form = request.form
-		print form
 		t=localtime()
 		things=['card.png','wallet.jpg','keys.png','phone.png','others.png']
 		g.userdata=UserData()
@@ -73,6 +68,7 @@ def form():
 		g.userdata.Type=form['Type']
 		g.userdata.Content=form['Content']
 		g.userdata.ContactWay=form['ContactWay']
+		g.userdata.Reward=int(form["Reward"])
 		g.userdata.LostStatus=True
 		g.userdata.SubTime=str(t[0])+'.'+str(t[1])+'.'+str(t[2])
 		g.userdata.ImgPath=things[int(form['ThingsType'])]
@@ -149,6 +145,20 @@ def manage(page=1):
 		return render_template('manage_web.html',users=admins,page=page)
 
 
+@app.route("/found/admin/login", methods=["GET", "POST"])
+def adminLogin():
+	if request.method == 'POST':
+		UserId = request.form.get("UserId", None)
+		PassWord = request.form.get("PassWord", None)
+		user = db.session.query(User).filter(User.UserId==UserId)[0]
+		if user.PassWord == hashpw(PassWord):
+			session['adminid'] = user.UserId
+			return redirect("/found/admin")
+		else:
+			return redirect("/found/admin/login")
+	return render_template("admin_login.html")
+
+
 @app.route('/found/admin',methods=['GET','POST'])
 @app.route('/found/admin/<int:page>',methods=['GET','POST'])
 def admin(page=1):
@@ -172,7 +182,7 @@ def admin(page=1):
 @app.route('/found/logout',methods=['GET'])
 def logout():
 	session['userid']=''
-	
+
 
 
 if __name__=='__main__':

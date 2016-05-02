@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+#coding=utf8
 import sys
 sys.path.append('..')
 from model import *
@@ -132,12 +132,14 @@ def form():
 			f.save(os.path.join(IMG_FLODER,fname))
 			Thumbnail(fname)
 		g.userdata=UserData()
+		g.userdata.Header = form["Header"]
 		g.userdata.Time=form['Time']
 		g.userdata.Place=form['Place']
 		g.userdata.ThingsType=form['ThingsType']
 		g.userdata.Type=form['Type']
 		g.userdata.Content=form['Content']
 		g.userdata.ContactWay=form['ContactWay']
+		g.userdata.Reward=form['Reward']
 		g.userdata.LostStatus=True
 		g.userdata.SubTime=str(t[0])+'.'+str(t[1])+'.'+str(t[2])
 		g.userdata.ImgPath=fname
@@ -161,42 +163,65 @@ def index(page = 1):
 		LoginVer=False
 	else:
 		LoginVer=True
-	paginate = UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(page, 5, False)
+	_type = request.args.get("type", "寻物")
+	paginate = UserData.query.filter(UserData.Verify==True, UserData.Type==_type).order_by(UserData.Id.desc()).paginate(page, 8, False)
 	# for i in paginate.items:
 	if not IsMobile(request.headers.get('User-Agent')):
-		return render_template('index_web.html',users=paginate,page=page,title=u'寻物招领',Login=LoginVer)
+		return render_template('index_web.html',users=paginate,page=page,title=u'寻物招领',Login=LoginVer, Type=_type)
 	else:
-		return render_template('index.html',users=paginate,page=page,title=u'寻物招领',Login=LoginVer)
+		return render_template('index.html',users=paginate,page=page,title=u'寻物招领',Login=LoginVer, Type=_type)
 
+
+@app.route("/found/detail/<int:Id>", methods=["GET"])
+def detail(Id):
+	if 'userid' in session and session['userid']!='':
+		LoginVer=False
+	else:
+		LoginVer=True
+	user = UserData.query.filter(UserData.Id==Id).first()
+	user_info = User.query.filter(User.UserId==user.UserId).first()
+	if not IsMobile(request.headers.get('User-Agent')):
+		return render_template('found_detail_web.html',user=user, Login=LoginVer, user_info=user_info)
+	else:
+		return render_template('found_detail.html',user=user ,Login=LoginVer, user_info=user_info)
+
+
+@app.route("/found/search", defaults={"page": 1}, methods=["GET"])
+def search(page):
+	if 'userid' in session and session['userid']!='':
+		LoginVer=False
+	else:
+		LoginVer=True
+	keyword = request.args.get("keyword", None)
+
+	paginate = UserData.query.filter(UserData.Header.ilike("%"+keyword+"%")).order_by(UserData.Id.desc()).paginate(page, 8, False)
+	if not IsMobile(request.headers.get('User-Agent')):
+		return render_template('index_web.html',users=paginate,page=1,title=u'寻物招领',Login=LoginVer)
+	else:
+		return render_template('index.html',users=paginate,page=1,title=u'寻物招领',Login=LoginVer)
 
 
 @app.route('/found/verified',methods=['GET'])
 @app.route('/found/verified/<int:page>',methods=['GET'])
 def verified(page=1):
-	if 'userid' not in session or session['userid']=='':
-		return redirect('/found/login')
-	if 'userid' in session and session['userid']!='':
-		LoginVer=False
+	if 'adminid' not in session or session['adminid']=='':
+		return redirect('/found/admin/login')
 	else:
-		LoginVer=True
-	if session['userid'] not in admin_list:
-		return redirect('/found/')
-	if request.query_string:
-		x=request.args
-		if x['type']=='0':
-			db.session.query(UserData).filter_by(Id=x['id']).delete()
-		elif x['type']=='1':
-			db.session.query(UserData).filter_by(Id=x['id']).update({'LostStatus':False})
-		elif x['type']=='2':
-			db.session.query(UserData).filter_by(Id=x['id']).update({'Verify':True})
-		db.session.commit()
-		db.session.close()
-		admins=UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(int(x['page']),8,False)
-
-		return render_template('verified.html',users=admins,page=int(x['page']))
-	else:
-		admins=UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(page,8,False) #test
-		return render_template('verified.html',users=admins,page=page,Login=LoginVer)
+		if request.query_string:
+			x=request.args
+			if x['type']=='0':
+				db.session.query(UserData).filter_by(Id=x['id']).delete()
+			elif x['type']=='1':
+				db.session.query(UserData).filter_by(Id=x['id']).update({'LostStatus':False})
+			elif x['type']=='2':
+				db.session.query(UserData).filter_by(Id=x['id']).update({'Verify':True})
+			db.session.commit()
+			db.session.close()
+			admins=UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(int(x['page']),8,False)
+			return render_template('verified.html',users=admins,page=int(x['page']))
+		else:
+			admins=UserData.query.filter(UserData.Verify==True).order_by(UserData.Id.desc()).paginate(page,8,False) #test
+			return render_template('verified.html',users=admins,page=page)
 
 
 @app.route('/found/manage',methods=['GET','POST'])
@@ -231,33 +256,41 @@ def manage(page=1):
 			return render_template('manage.html',users=admins,page=page,title=u'管理启事',Login=LoginVer)
 
 
+@app.route("/found/admin/login", methods=["GET", "POST"])
+def adminLogin():
+	if request.method == 'POST':
+		UserId = request.form.get("UserId", None)
+		PassWord = request.form.get("PassWord", None)
+		user = db.session.query(AdminUser).filter(AdminUser.UserId==UserId)[0]
+		if user.PassWord == hashpw(PassWord):
+			session['adminid'] = user.UserId
+			return redirect("/found/admin")
+		else:
+			return redirect("/found/admin/login")
+	return render_template("admin_login.html")
+
+
 @app.route('/found/admin',methods=['GET','POST'])
 @app.route('/found/admin/<int:page>',methods=['GET','POST'])
 def admin(page=1):
-	if 'userid' not in session or session['userid']=='':
-		return redirect('/found/login')
-	if 'userid' in session and session['userid']!='':
-		LoginVer=False
+	if 'adminid' not in session or session['adminid']=='':
+		return redirect('/found/admin/login')
 	else:
-		LoginVer=True
-	if session['userid'] not in admin_list:
-		return redirect('/found/')
-	admin=UserData()
-	if request.query_string:
-		x=request.args
-		if x['type']=='0':
-			db.session.query(UserData).filter_by(Id=x['id']).delete()
-		elif x['type']=='1':
-			db.session.query(UserData).filter_by(Id=x['id']).update({'LostStatus':False})
-		elif x['type']=='2':
-			db.session.query(UserData).filter_by(Id=x['id']).update({'Verify':True})
-		db.session.commit()
-		db.session.close()
-		admins=UserData.query.filter(UserData.Verify==False).order_by(UserData.Id.desc()).paginate(int(x['page']),8,False)
-		return render_template('admin.html',users=admins,page=int(x['page']))
-	else:
-		admins=UserData.query.filter(UserData.Verify==False).order_by(UserData.Id.desc()).paginate(page,8,False) #test
-		return render_template('admin.html',users=admins,page=page)
+		if request.query_string:
+			x=request.args
+			if x['type']=='0':
+				db.session.query(UserData).filter_by(Id=x['id']).delete()
+			elif x['type']=='1':
+				db.session.query(UserData).filter_by(Id=x['id']).update({'LostStatus':False})
+			elif x['type']=='2':
+				db.session.query(UserData).filter_by(Id=x['id']).update({'Verify':True})
+			db.session.commit()
+			db.session.close()
+			admins=UserData.query.filter(UserData.Verify==False).order_by(UserData.Id.desc()).paginate(int(x['page']),8,False)
+			return render_template('admin_web.html',users=admins,page=int(x['page']))
+		else:
+			admins=UserData.query.filter(UserData.Verify==False).order_by(UserData.Id.desc()).paginate(page,8,False) #test
+			return render_template('admin_web.html',users=admins,page=page)
 
 @app.route('/found/logout',methods=['GET'])
 def logout():
