@@ -170,6 +170,13 @@ def feedback():
 		return render_template("feedback.html")
 
 
+@app.route("/found/yibanfriend", methods=["GET", "POST"])
+@login_required
+@wrapper_user_info(mobile=True)
+def yibanfriend():
+	return render_template("yibanfriend.html", user_info=g.user_info)
+
+
 @app.route('/found/verified',methods=['GET'])
 @app.route('/found/verified/<int:page>',methods=['GET'])
 def verified(page=1):
@@ -287,6 +294,16 @@ def yiban():
 def award():
 	s = requests.get("https://openapi.yiban.cn/school/award_wx", params=dict(request.args)).text
 	return jsonify(json.loads(s))
+
+
+@app.route("/found/friend/me_list", methods=["GET"])
+def me_list():
+	if session['thirdLogin']:
+		user_temp = ThirdLoginUser.query.filter_by(UserId=session.get("userid", None)).first()
+		s = requests.get("https://openapi.yiban.cn/friend/me_list?access_token={access_token}&count=8".format(access_token=user_temp.AccessToken)).text
+		return jsonify(json.loads(s))
+	else:
+		return jsonify({"status": "failed"})
 
 
 if __name__=='__main__':

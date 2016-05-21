@@ -107,6 +107,41 @@ $$(".get-money").on('click', function() {
   })
 });
 
+$$(".send-money").on('click', function() {
+    //发送ajax请求
+    myApp.showPreloader();
+    $$.ajax({
+      type: "GET",
+      url: "/found/friend/me_list",
+      success: function(result) {
+          myApp.hidePreloader();
+          var result = JSON.parse(result);
+          if (result.status == "success") {
+            var friend_list = result.info.list;
+            for (x in friend_list) {
+              $$(".yiban-friend-list").append(
+                "<div class='list-group'><ul><li>" +
+                      '<label class="item-content label-radio"><input type="radio" name="my-radio" value="' +
+                      friend_list[x].yb_userid + '" checked="checked" />' +
+                        '<div class="item-media">'+
+                          '<img src="'+ friend_list[x].yb_userhead +'" class="search-user-img" /></div>'+
+                        '<div class="item-inner"><div class="item-title">' +
+                        friend_list[x].yb_username + '</div></div></label></li></ul></div>'
+              )
+            }
+          }
+          else {
+            myApp.alert("糟糕，出了点问题~", "");
+            window.location.href = "/found/user";
+          }
+      },
+      error: function(error) {
+        myApp.hidePreloader();
+        window.location.href = "/found/user";
+      }
+    });
+});
+
 // $$(".form-to-json").on('click', function() {
 //   var formData = myApp.formToJSON('#my-form');
 //   // 验证易班id

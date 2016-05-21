@@ -63,10 +63,17 @@
     <ul>
       <li class="list-group-title"></li>
       <li>
-        <a href="/found/money" class="item-link item-content send-money">
+        <a href="/found/money" class="item-link item-content">
           <div class="item-inner">
               <div class="item-title">网薪&nbsp;&nbsp;{{user_info.money}}</div>
               <div class="item-after get-money">领网薪</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-popup=".popup-yibanfriend" class="item-link open-popup item-content send-money">
+          <div class="item-inner">
+              <div class="item-title">赠送网薪</div>
           </div>
         </a>
       </li>
@@ -78,6 +85,7 @@
   <div onclick="window.location.href='/found/logout'" class="button button-fill button-big color-red">退出</div>
 </div>
 {% endblock %}
+{% include 'yibanfriend.html' %}
 
 {% block bottomnav %}
 <div class="toolbar tabbar tabbar-labels">
