@@ -100,6 +100,13 @@ $$('.ac-one').on('click', function() {
   myApp.actions(groups);
 });
 
+
+$$(".get-money").on('click', function() {
+  myApp.confirm("感谢您使用失物招领~", "确认领取", function() {
+    myApp.alert("领取成功~");
+  })
+});
+
 // $$(".form-to-json").on('click', function() {
 //   var formData = myApp.formToJSON('#my-form');
 //   // 验证易班id
