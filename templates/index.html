@@ -22,7 +22,8 @@
 <div class="list-block media-list things white">
   <ul>
   {% for user in users.items %}
-  <li>
+  <li class="swipeout">
+    <div class="swipeout-content">
     <a href="#" class="item-link item-content">
       <div class="item-media">
         <img class="item-img" src="/static/img/{{user.ImgPath}}" />
@@ -38,6 +39,7 @@
         <div class="item-text">{{user.Content}}</div>
       </div>
     </a>
+  </div>
     <div class="swipeout-actions-right">
       <a href="#" class="bg-green ac-one">分享</a>
     </div>
