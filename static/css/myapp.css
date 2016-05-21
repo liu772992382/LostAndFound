@@ -190,3 +190,9 @@ form .item-title, form .item-input input, textarea {
 .logout {
   margin: 15px 15px;
 }
+
+.icon-yiban, .icon-qq, .icon-wechat {
+  width:25px;
+  height:25px;
+  border-radius: 50%;
+}

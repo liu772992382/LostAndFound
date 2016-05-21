@@ -71,6 +71,35 @@ $$(".form-to-json").on('click', function() {
   });
 });
 
+$$('.ac-one').on('click', function() {
+  var buttons1 = [
+    {
+        text: '分享至',
+        label: true
+    },
+    {
+      text: "<img src='/static/img/icon/yiban.png' class='icon-yiban' style='margin-right: -5px;' />&nbsp;&nbsp;易班",
+      color: 'gray'
+    },
+    {
+      text: "<img src='/static/img/icon/qq.jpg' class='icon-qq' />&nbsp;&nbsp;&nbsp;QQ",
+      color: 'gray'
+    },
+    {
+      text: "<img src='/static/img/icon/wechat.jpg' class='icon-wechat' />&nbsp;&nbsp;微信",
+      color: 'gray'
+    }
+  ];
+  var buttons2 = [
+        {
+            text: '取消',
+            color: 'red'
+        }
+    ];
+  var groups = [buttons1, buttons2];
+  myApp.actions(groups);
+});
+
 // $$(".form-to-json").on('click', function() {
 //   var formData = myApp.formToJSON('#my-form');
 //   // 验证易班id
